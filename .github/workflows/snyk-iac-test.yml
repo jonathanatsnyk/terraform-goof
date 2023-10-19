@@ -1,0 +1,25 @@
+name: Snyk IAC Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  snyk_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Snyk IAC test
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          curl -L -o snyk "https://github.com/snyk/snyk/releases/download/v1.658.0/snyk-linux"
+          chmod +x ./snyk
+          ./snyk iac test --severity-threshold=high
